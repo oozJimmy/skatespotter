@@ -13,9 +13,21 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
     <link rel="icon" type="image/x-icon" href="images/greenIcon.ico">
   </head>
+  
   <body>
     <h1>SkateSpotter</h1>
     <h3>Find skate spots near you!</h3>
+    <!--Text field for lat lng and submit button-->
+    <h5>Add a skate spot to the map!</h5>
+    <div class="input">
+      <label for="spot-name">Spot Name:</label><br>
+      <input type="text" id="spot-name" placeholder="Add a name for your spot"><br>
+      <label for="lat">Latitude:</label><br>
+      <input type="text" id="lat" placeholder="Latitude"><br>
+      <label for="lng">Longitude:</label><br>
+      <input type="text" id="lng" placeholder="Longitude"><br>
+      <button type="submit" id="spot-submit">Submit Spot</button>
+    </div>
     <!--The div element for the map -->
     <div id="map"></div>
 

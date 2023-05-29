@@ -1,17 +1,17 @@
-// Initialize and add the map
+// Initialize map variable
 let map;
 
-async function initMap() {
+// Request needed libraries.
+//@ts-ignore
+const { Map } = await google.maps.importLibrary("maps");
+const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
-    // Court and state in Binghamton
+async function initMap() {
+    // Position objects
     const mapCenter = { lat: 42.098716, lng: -75.912528 };
     const courtBridgeMosaic = {lat:42.098575 , lng:-75.915483 };
-    // Request needed libraries.
-    //@ts-ignore
-    const { Map } = await google.maps.importLibrary("maps");
-    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
-    // The map, centered at Uluru
+    // The map, centered at Court and state, downtown Binghamton
     map = new Map(document.getElementById("map"), {
     zoom: 8,
     center: mapCenter,
@@ -27,4 +27,22 @@ async function initMap() {
     console.log('Map init function called',map)
 }
 
+async function addSpot(){ //Callback function for submit button
+    //Get latitude and longitude from input fields
+    let latitude = parseFloat(document.getElementById('lat').value)
+    let longitude = parseFloat(document.getElementById('lng').value)
+    let spotName = document.getElementById('spot-name').value
+
+    //Create marker and add to map
+    const spotMarker = new AdvancedMarkerElement({
+        map: map,
+        position: {lat: latitude,lng: longitude},
+        title: spotName,
+        });
+    console.log('addSpot function called',spotMarker)
+}
+
+document.getElementById('spot-submit').addEventListener('click',addSpot)
+
+//Call function to intitialize the map
 initMap();
