@@ -1,25 +1,30 @@
 // Initialize map variable
 let map;
-
+console.log('script.js called')
 // Request needed libraries.
 //@ts-ignore
-const { Map } = await google.maps.importLibrary("maps");
-const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+let mapConstructor, markerConstructor
 
 async function initMap() {
+    //Import map and marker 
+    const { Map } =  await google.maps.importLibrary("maps");
+    const { AdvancedMarkerElement } =  await google.maps.importLibrary("marker");
+    mapConstructor = Map
+    markerConstructor = AdvancedMarkerElement
+
     // Position objects
     const mapCenter = { lat: 42.098716, lng: -75.912528 };
     const courtBridgeMosaic = {lat:42.098575 , lng:-75.915483 };
 
     // The map, centered at Court and state, downtown Binghamton
-    map = new Map(document.getElementById("map"), {
+    map = new mapConstructor(document.getElementById("map"), {
     zoom: 8,
     center: mapCenter,
     mapId: "DEMO_MAP_ID",
     });
 
     // Marker dropped at mosaic by court bridge skate spot
-    const marker = new AdvancedMarkerElement({
+    const marker = new markerConstructor({
     map: map,
     position: courtBridgeMosaic,
     title: "Court St. Bridge Mosaic",
@@ -34,7 +39,7 @@ async function addSpot(){ //Callback function for submit button
     let spotName = document.getElementById('spot-name').value
 
     //Create marker and add to map
-    const spotMarker = new AdvancedMarkerElement({
+    const spotMarker = new markerConstructor({
         map: map,
         position: {lat: latitude,lng: longitude},
         title: spotName,
