@@ -61,14 +61,5 @@ exports.readAll =  async () => {
     const results = await cursor.toArray()
 
     //console.log(`PRINT:All from collection:\n${results}`)
-
-    /* if(results.length > 0){
-        console.log('PRINT:All from collection:')
-        results.forEach((result,i) => {
-            console.log(`\n${i+1}.${result.name}`)
-            console.log(`Latitude: ${result.latitude}`)
-            console.log(`Longitude: ${result.longitude}`)
-        })
-    } else {console.log(`No listings found.`)} */
     return results
 }
