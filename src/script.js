@@ -51,3 +51,24 @@ document.getElementById('spot-submit').addEventListener('click',addSpot)
 
 //Call function to intitialize the map
 initMap();
+
+function loadSpots(){
+    fetch('http://localhost:5000/spotlist',{
+    method:'GET'})
+    .then((response) => response.json())
+    .then((response) => displaySpotJSON(response))
+    .catch((error)=>console.error(error))     
+}
+
+function displaySpotJSON(obj){
+    console.log(`from parseSpotJSON:`,obj)
+    console.log(obj.length)
+    var append = '<h4>List of all spots</h4><ul>'
+    for(var i = 0; i<obj.length;i++){
+        append += `<li>${obj[i].name}<br>Latitude:${obj[i].latitude}<br>Longitude:${obj[i].longitude}</li>`
+    }
+    append += '</ul>'
+    document.getElementById('spotlist').insertAdjacentHTML('beforeend',append)
+}
+
+loadSpots()

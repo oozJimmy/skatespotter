@@ -16,6 +16,27 @@ app.get('/',(req,res) =>{
     res.sendFile(__dirname+filename)
 })
 
+app.get('/spotlist',(req,res) => {
+  db.connect(db.readAll,{})
+  .then((data) => {
+    //console.log(data)
+    res.send(data)},
+    (error) => res.send(`ERROR:${error}`)
+    )
+})
+
+app.get('/server',(req,res) => {
+  db.readUri()
+  .then((data) => {
+    //console.log(data)
+    res.send(data)
+  },(error)=> res.send(`ERROR:${error}`))
+})
+
+app.get('/hello',(req,res) => {
+  res.send('RESPONSE:'+db.hello())
+})
+
 app.post('/spot',(req,res) =>{
   //Passing from "request body" test
   db.connect(db.createListing,{
@@ -24,15 +45,13 @@ app.post('/spot',(req,res) =>{
     longitude:-75.915483
   }).then((value)=>console.log(`Mongo upload resolved:${value}`),
            (error)=>console.log('ERROR:' +error))
-  
-
   res.send('Response, check database')
 },)
 
 app.delete('/spot', (req,res)=>{
   db.connect(db.deleteListingByName,'Court St. Bridge Mosaic')
   .then((value)=>console.log(`Mongo delete resolved:${value}`),
-        (error)=>console.log('ERROR:' +error))
+        (error)=>console.log('ERROR:',error))
 
   res.send('Delete response, check console and database')
 })
