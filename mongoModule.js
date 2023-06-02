@@ -61,5 +61,6 @@ exports.readAll =  async () => {
     const results = await cursor.toArray()
 
     //console.log(`PRINT:All from collection:\n${results}`)
+
     return results
 }

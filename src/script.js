@@ -60,7 +60,6 @@ function loadSpots(){
     .catch((error)=>console.error(error))     
 }
 
-
 function displaySpotJSON(obj){
     console.log(`from parseSpotJSON:`,obj)
     console.log(obj.length)
