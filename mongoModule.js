@@ -9,28 +9,25 @@ var client = new MongoClient(uri)
 exports.hello = () => {
     return uri
 }
-exports.readUri =async  ()=>{
-    try {
-        const data = fs.readFileSync(path.join(__dirname,'mongodata.txt'),'utf8');
-        uri = data.toString()
-        //console.log('MODULE SUCCESS:','URI:',uri)
-        return uri
-      } catch (err) {
-        console.error('MODULE ERROR:',err);
-        return err
-      }
-}
 
+//MongoDB database connect function, calls accessor callback function to handle data operation
 exports.connect =  async (accessor,arg) =>{
-
-    
+    //arg object layout:
+    /* {
+        listing:{ //New or updated data listing
+            name:'Seven to Heaven',
+            latitude: 34.57835,
+            longitude: 83.2772522
+        } 
+        searchName: 'Sick Seven Stair' 
+    } */
     try{
         //Open database connection
         await client.connect()
 
         //Make DB calls
-        var result = await accessor(
-        ).then((response)=>{
+        var result = await accessor(arg)
+        .then((response)=>{
             //console.log(`.then callback:\n`,response)
             return response})
         //console.log(`MODULE: result : ${result}`)

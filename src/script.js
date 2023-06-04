@@ -24,12 +24,21 @@ async function initMap() {
     });
 
     // Marker dropped at mosaic by court bridge skate spot
-    const marker = new markerConstructor({
+    /* const marker = new markerConstructor({
     map: map,
     position: courtBridgeMosaic,
     title: "Court St. Bridge Mosaic",
-    });
+    }); */
     console.log('Map init function called',map)
+}
+
+function addMarker(latitude,longitude,name){
+    const spotMarker = new markerConstructor({
+        map: map,
+        position: {lat: parseFloat(latitude),lng: parseFloat(longitude)},
+        title: name,
+        });
+    console.log('addMarker function called',spotMarker)
 }
 
 async function addSpot(){ //Callback function for submit button
@@ -39,37 +48,52 @@ async function addSpot(){ //Callback function for submit button
     let spotName = document.getElementById('spot-name').value
 
     //Create marker and add to map
-    const spotMarker = new markerConstructor({
-        map: map,
-        position: {lat: latitude,lng: longitude},
-        title: spotName,
-        });
-    console.log('addSpot function called',spotMarker)
+    addMarker(latitude,longitude,spotName)
+
+    //Create database entry for data
+    fetch('http://localhost:5000/spot',{
+        'method':'POST',
+        'headers':{
+            "Content-Type": "application/json",
+        },
+        'body':JSON.stringify(
+            {name:spotName,
+            latitude:latitude,
+            longitude:longitude})
+    })
+        .then((response) => response.json())
+        .then((json) => {
+            displaySpotJSON(response)
+            console.log(json)})
+        .catch((error)=>console.error(error))
+}
+
+function loadSpots(){
+    //Loads the spot list 
+    fetch('http://localhost:5000/spotlist',{
+    method:'GET'})
+    .then((response) => response.json())
+    .then((json) => displaySpotJSON(json))
+    .catch((error)=>console.error(error))
+}
+
+function displaySpotJSON(obj){
+    console.log(`from parseSpotJSON:`,obj)
+    console.log(obj.length)
+    var append = '<h4>List of all spots</h4><ol>'
+    for(var i = 0; i<obj.length;i++){
+        append += `<li>${obj[i].name}<br>Latitude:${obj[i].latitude}<br>Longitude:${obj[i].longitude}</li>`
+
+        //Add spots to map
+        addMarker(obj[i].latitude,obj[i].longitude,obj[i].name)
+    }
+    append += '</ol>'
+    document.getElementById('spotlist').innerHTML = append
 }
 
 document.getElementById('spot-submit').addEventListener('click',addSpot)
 
 //Call function to intitialize the map
-initMap();
-
-function loadSpots(){
-    fetch('http://localhost:5000/spotlist',{
-    method:'GET'})
-    .then((response) => response.json())
-    .then((response) => displaySpotJSON(response))
-    .catch((error)=>console.error(error))     
-}
-
-
-function displaySpotJSON(obj){
-    console.log(`from parseSpotJSON:`,obj)
-    console.log(obj.length)
-    var append = '<h4>List of all spots</h4><ul>'
-    for(var i = 0; i<obj.length;i++){
-        append += `<li>${obj[i].name}<br>Latitude:${obj[i].latitude}<br>Longitude:${obj[i].longitude}</li>`
-    }
-    append += '</ul>'
-    document.getElementById('spotlist').insertAdjacentHTML('beforeend',append)
-}
+initMap()
 
 loadSpots()
