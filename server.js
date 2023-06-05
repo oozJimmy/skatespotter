@@ -20,7 +20,7 @@ app.get('/',(req,res) =>{
 })
 
 app.get('/spotlist',(req,res) => {
-  db.connect(db.readAll,{})
+  db.connect(db.readAll,{collection:'spots'})
   .then((data) => {
     //console.log(data)
     res.send(data)},
@@ -28,40 +28,26 @@ app.get('/spotlist',(req,res) => {
     )
 })
 
-app.get('/server',(req,res) => {
-  db.readUri()
-  .then((data) => {
-    //console.log(data)
-    res.send(data)
-  },(error)=> res.send(`ERROR:${error}`))
-})
-
 app.get('/hello',(req,res) => {
   res.send('RESPONSE:'+db.hello())
 })
 
 //-------------------POST routing-------------------
-app.post('/posttest',(req,res)=>{
-  console.log('/posttest request body',req.body)
-  res.send('/posttest request body:\n' + JSON.stringify(req.body))
-})
-
 app.post('/spot',(req,res) =>{
   //Passing from "request body" test
   console.log('/spot POST: request body:',req.body)
-  db.connect(db.createListing,req.body)
-  .then((value)=>console.log(`Mongo upload resolved:`,value),
+  db.connect(db.createListing,{listing:req.body})
+  .then((value)=>{console.log(`Mongo upload resolved:`+JSON.stringify(value))
+                  res.send(`Mongo upload resolved:`+JSON.stringify(value) + JSON.stringify(req.body)+ 'uploaded')},
         (error)=>console.log('ERROR:',error))
-  res.status(200).send(JSON.stringify(req.body))
+  //res.status(200).send(JSON.stringify(req.body))
 })
 
 //-------------------DELETE routing-------------------
 app.delete('/spot', (req,res)=>{
-  db.connect(db.deleteListingByName,'Court St. Bridge Mosaic')
-  .then((value)=>console.log(`Mongo delete resolved:`,value),
-        (error)=>console.log('ERROR:',error))
-
-  res.send('Delete response, check console and database')
+  db.connect(db.deleteListingByName,{searchName:req.body.searchName})
+  .then((value)=>res.send(`Mongo delete resolved:\n${JSON.stringify(value)}`),
+        (error)=>res.send(error))
 })
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))

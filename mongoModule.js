@@ -1,10 +1,11 @@
 const {MongoClient} = require('mongodb')
 const fs = require('fs')
-const database = 'skatespotter'
-const collection = 'spots'
 const path = require('path')
 var uri = fs.readFileSync(path.join(__dirname,'mongodata.txt'),'utf8').toString()
 var client = new MongoClient(uri)
+const database = 'skatespotter'
+const collection = 'spots'
+const userCollection = 'users'
 
 exports.hello = () => {
     return uri
@@ -12,14 +13,15 @@ exports.hello = () => {
 
 //MongoDB database connect function, calls accessor callback function to handle data operation
 exports.connect =  async (accessor,arg) =>{
-    //arg object layout:
+    //arg object layout: UNIMPLEMENTED
     /* {
-        listing:{ //New or updated data listing
+        listing:{ //MongoDB spot schema
             name:'Seven to Heaven',
             latitude: 34.57835,
             longitude: 83.2772522
         } 
         searchName: 'Sick Seven Stair' 
+        collection: 'spots'
     } */
     try{
         //Open database connection
@@ -41,23 +43,33 @@ exports.connect =  async (accessor,arg) =>{
     return result
 }
 
-exports.createListing = async (newListing) => {
-    const result = await client.db(database).collection(collection).insertOne(newListing);
+//---------------------Create---------------------
+exports.createListing = async (obj) => {
+    const result = await client.db(database).collection(collection).insertOne(obj.listing);
     console.log(`New listing created with the following id: ${result.insertedId}`);
     console.log('TEST: createListing called')
+    return result
 }
 
-exports.deleteListingByName = async (nameOfListing) => {
-    const result = await client.db(database).collection(collection)
-            .deleteOne({ name: nameOfListing });
-    console.log(`${result.deletedCount} document(s) was/were deleted.`);
+//---------------------Read---------------------
+exports.readOne = async (obj) => {
+    const result = await client.db(database).collection(obj.collection).findOne({ name: obj.spotName });
 }
 
-exports.readAll =  async () => {
-    const cursor = await client.db(database).collection(collection).find({})
+exports.readAll =  async (obj) => {
+    const cursor = await client.db(database).collection(obj.collection).find({})
     const results = await cursor.toArray()
 
     //console.log(`PRINT:All from collection:\n${results}`)
 
     return results
+}
+
+//---------------------Delete---------------------
+exports.deleteListingByName = async (obj) => {
+    console.log('Delete test: obj:\n',obj)
+    const result = await client.db(database).collection(collection)
+            .deleteOne({ name: obj.searchName });
+    console.log(`${result.deletedCount} document(s) was/were deleted.`);
+    return result
 }
