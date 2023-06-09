@@ -13,15 +13,18 @@ exports.hello = () => {
 
 //MongoDB database connect function, calls accessor callback function to handle data operation
 exports.connect =  async (accessor,arg) =>{
-    //arg object layout: UNIMPLEMENTED
+    //arg object layout:
     /* {
         listing:{ //MongoDB spot schema
             name:'Seven to Heaven',
             latitude: 34.57835,
-            longitude: 83.2772522
+            longitude: 83.2772522,
+            
+            //or for use w signup schema(username uses name from above)
+            password:'i11swe@T'
         } 
-        searchName: 'Sick Seven Stair' 
-        collection: 'spots'
+        searchName: 'Sick Seven Stair', 
+        collection: 'spots',
     } */
     try{
         //Open database connection
@@ -45,19 +48,20 @@ exports.connect =  async (accessor,arg) =>{
 
 //---------------------Create---------------------
 exports.createListing = async (obj) => {
-    const result = await client.db(database).collection(collection).insertOne(obj.listing);
-    console.log(`New listing created with the following id: ${result.insertedId}`);
-    console.log('TEST: createListing called')
+    console.log(`MODULE CREATE LISTING:obj.collection:${obj.collection}\n${obj.collection ? obj.collection:'spots'}`)
+    const result = await client.db(database).collection(obj.collection ? obj.collection : 'spots').insertOne(obj.listing)
+    console.log(`New listing created with the following id: ${result.insertedId}`)
     return result
 }
 
 //---------------------Read---------------------
 exports.readOne = async (obj) => {
-    const result = await client.db(database).collection(obj.collection).findOne({ name: obj.spotName });
+    const result = await client.db(database).collection(obj.collection ? obj.collection:'spots').findOne({ name: obj.searchName });
+    return result
 }
 
 exports.readAll =  async (obj) => {
-    const cursor = await client.db(database).collection(obj.collection).find({})
+    const cursor = await client.db(database).collection(obj.collection ? obj.collection:'spots').find({})
     const results = await cursor.toArray()
 
     //console.log(`PRINT:All from collection:\n${results}`)
@@ -68,7 +72,7 @@ exports.readAll =  async (obj) => {
 //---------------------Delete---------------------
 exports.deleteListingByName = async (obj) => {
     console.log('Delete test: obj:\n',obj)
-    const result = await client.db(database).collection(collection)
+    const result = await client.db(database).collection(obj.collection ? obj.collection:'spots')
             .deleteOne({ name: obj.searchName });
     console.log(`${result.deletedCount} document(s) was/were deleted.`);
     return result

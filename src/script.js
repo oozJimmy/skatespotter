@@ -1,9 +1,10 @@
 // Initialize map variable
-let map;
+var map;
 console.log('script.js called')
 // Request needed libraries.
 //@ts-ignore
-let mapConstructor, markerConstructor
+var mapConstructor
+var markerConstructor
 
 async function initMap() {
     //Import map and marker 
@@ -91,7 +92,58 @@ function displaySpotJSON(obj){
     document.getElementById('spotlist').innerHTML = append
 }
 
+function logIn(){
+    var username = document.getElementById('usr').value
+    var password = document.getElementById('pwd').value
+
+    console.log('logIn function called')
+    //Make HTTP request, successful response gives user object
+    fetch('http://localhost:5000/login',
+        {
+            method:'POST',
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                username:username,
+                password:password
+            })})
+        .then((response) => response.json())
+        .then((json)=>{
+            console.log(json)
+            document.getElementById('user').innerHTML = `<p>Hello ${json.name}, welcome to skatespotter</p>`
+        })
+        .catch((error)=>console.log(error))
+}
+
+function signUp(){
+    var username = document.getElementById('newusr').value
+    var password = document.getElementById('newpwd').value
+
+    console.log('signUp function called')
+    //Make HTTP request, successful response gives user object
+    fetch('http://localhost:5000/signup',
+        {
+            method:'POST',
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                username:username,
+                password:password
+            })})
+        .then((response) => console.log(response))
+        /* .then((json)=>{
+            console.log(json)
+            //document.getElementById('user').innerHTML = `<p>Hello ${json.name}, welcome to skatespotter`
+        }) */
+        .catch((error)=>console.log(error))
+}
+
+//Attach listener callbacks to submit buttons
 document.getElementById('spot-submit').addEventListener('click',addSpot)
+document.getElementById('login-submit').addEventListener('click',logIn)
+document.getElementById('signup-submit').addEventListener('click',signUp)
 
 //Call function to intitialize the map
 initMap()
