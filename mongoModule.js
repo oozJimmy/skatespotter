@@ -48,7 +48,6 @@ exports.connect =  async (accessor,arg) =>{
 
 //---------------------Create---------------------
 exports.createListing = async (obj) => {
-    console.log(`MODULE CREATE LISTING:obj.collection:${obj.collection}\n${obj.collection ? obj.collection:'spots'}`)
     const result = await client.db(database).collection(obj.collection ? obj.collection : 'spots').insertOne(obj.listing)
     console.log(`New listing created with the following id: ${result.insertedId}`)
     return result

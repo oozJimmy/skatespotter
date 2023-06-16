@@ -5,3 +5,7 @@ todo:
 -add google maps platform to spot submit (drop pin)
 -add more bootstrap 
 -add conditional functions to signup/login/logout displaying buttons
+
+
+compile scss:
+sass custom.scss bootstrap.css

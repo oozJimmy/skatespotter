@@ -7,6 +7,7 @@ const url = require('url')
 const db = require('./mongoModule')
 const favicon = require('serve-favicon')
 const path = require('path')
+const bcrypt = require('bcrypt')
 
 //Express Middleware
 app.use(express.static(__dirname)); //Send static files 
@@ -47,60 +48,67 @@ app.post('/spot',(req,res) =>{
   //res.status(200).send(JSON.stringify(req.body))
 })
 
-//Login
-app.post('/login',(req,res)=>{
-  db.connect(db.readOne,
-    {
+//Alt login NEW
+app.post('/users/login',async (req,res)=>{
+  const userQuery = {
     searchName:req.body.username,
     collection:'users'
-    })
-    .then(
-      (value)=>{
-        if(value){
-          if(value.password === req.body.password){
-            res.status(202).send(value)
-          }else
-            res.status(201).send(`${req.body.username} has the wrong password.`)
-        }else
-          res.status(200).send(`No ${req.body.username} found who dat`)
-      },
-      (error)=>res.send(error))
+  }
+
+  //Check that username isn't empty string
+  if(req.body.username === '')
+    return res.status(406).send('Required fields missing')
+  
+  try{
+    const user = await db.connect(db.readOne,userQuery)
+
+    if(!user)
+      return res.status(404).send('Can\'t find user')
+    
+    if(await bcrypt.compare(req.body.password, user.password))
+      res.status(202).send('Success')
+    else
+      res.status(400).send('Wrong password')
+  
+    }catch{
+    res.status(500).send('Error occurred.')
+  }
 })
 
-//Signup
-app.post('/signup',(req,res)=>{
-  
-  db.connect(db.readOne,
-    {
+//Alt signup NEW
+app.post('/users',async (req,res)=>{
+  const hashedPassword = await bcrypt.hash(req.body.password, 10)
+
+  const searchObj = {
     searchName:req.body.username,
     collection:'users'
-    })
-    .then(
-      (value)=>{
-        if(value){
-            res.status(200).send(`${req.body.username} already exists.`)
-            console.log('User already exists')
-        }else{
-          console.log(`No ${req.body.username} found,creating listing`)
-          db.connect(db.createListing,
-            {
-              collection:'users',
-              listing:{
-                name:req.body.username,
-                password:req.body.password
-              }
-            })
-            .then((value)=>{
-              console.log(value)
-              res.status(200).send(`User creation successful:${JSON.stringify(value)}`)
-            },
-            (error)=>{
-              console.log(error)
-              res.status(400).send('Error creating user entry')
-            })
-        }
-      },
-      (error)=>res.send(error))
+  }
+
+  const listingObj = {
+    collection:'users',
+    listing:{
+      name:req.body.username,
+      password: hashedPassword//Hash the req user password
+    }
+  }
+  //Check that username and pass not empty string
+  if(req.body.username === '' || req.body.password === '')
+    return res.status(406).send('Required fields missing')
+
+  try{
+    //Call database to find user with given username
+    if(await db.connect(db.readOne,searchObj)){
+      console.log(`${req.body.username} already exists.`)
+      return res.status(400).send(`${req.body.username} already exists.`)
+    }
+
+    //No name conflicts, so create new user
+    const result = await db.connect(db.createListing,listingObj)
+    res.status(201).send(result)
+
+  }catch{
+    res.status(500).send('Error occurred')
+  }
 })
 
 //-------------------DELETE routing-------------------
