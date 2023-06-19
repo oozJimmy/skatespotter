@@ -19,15 +19,38 @@ async function initMap() {
     console.log('Map init function called',map)
 }
 
-async function addMarker(latitude,longitude,name){
-    const { AdvancedMarkerElement } =  await google.maps.importLibrary("marker");
+async function addMarker(spot){
+    const { AdvancedMarkerElement, PinElement } =  await google.maps.importLibrary("marker");
+    const { InfoWindow } = await google.maps.importLibrary("maps");
+
+    const pinCustom = new PinElement({
+        background: "#28bfb8",
+        borderColor: "#c71c6f",
+        glyphColor:"#451978"
+    });
 
     const spotMarker = new AdvancedMarkerElement({
-        map: map,
-        position: {lat: parseFloat(latitude),lng: parseFloat(longitude)},
-        title: name,
+        map,
+        position: {lat: parseFloat(spot.latitude),lng: parseFloat(spot.longitude)},
+        title: spot.name,
+        content:pinCustom.element
+    });
+
+    const spotInfo = new InfoWindow({
+        content: `<div class="container-fluid text-dark">
+                    <h3>${spot.name}</h3>
+                    <p>Latitude: ${spot.latitude}<br>
+                    Longitude:${spot.longitude}</p>
+                    </div>`,
+        ariaLabel: spot.name,
+    });
+
+    spotMarker.addListener("click", () => {
+        spotInfo.open({
+            anchor: spotMarker,
+            map,
         });
-    //console.log('addMarker function called',spotMarker)
+    });
 }
 
 //Add spot to the db and map
@@ -38,7 +61,11 @@ async function addSpot(){ //Callback function for submit button
     let spotName = document.getElementById('spot-name').value
 
     //Create marker and add to map
-    addMarker(latitude,longitude,spotName)
+    addMarker({
+        name:spotName,
+        latitude:latitude,
+        longitude:longitude
+    })
 
     //Create database entry for data
     fetch('http://localhost:5000/spot',{
@@ -71,14 +98,29 @@ function loadSpots(){
 //Displays HTML list given obj list of skate spots
 function displaySpotJSON(obj){
     console.log(`from parseSpotJSON:`,obj)
-    var append = '<h4>List of all spots</h4><ol>'
+    var append = `<h4>All Submitted Spots ( ${obj.length} )</h4>`
     for(var i = 0; i<obj.length;i++){
-        append += `<li>${obj[i].name}<br>Latitude:${obj[i].latitude}<br>Longitude:${obj[i].longitude}</li>`
+        //append += `<li>${obj[i].name}<br>Latitude:${obj[i].latitude}<br>Longitude:${obj[i].longitude}<br><p>Description: ${obj[i].description}</p></li>`
 
+        append += `<div class="accordion-item">
+        <h2 class="accordion-header" id="heading${i+1}">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${i+1}" aria-expanded="true" aria-controls="collapse${i+1}">
+            ${i+1}. ${obj[i].name}
+          </button>
+        </h2>
+        <div id="collapse${i+1}" class="accordion-collapse collapse" aria-labelledby="heading${i+1}" data-bs-parent="#spotlist">
+          <div class="accordion-body">
+            <ul>
+                <li>Latitude:${obj[i].latitude}</li>
+                <li>Longitude:${obj[i].longitude}</li>
+            </ul>
+            <p>Description: ${obj[i].description}</p>
+          </div>
+        </div>
+      </div>`
         //Add spots to map
-        addMarker(obj[i].latitude,obj[i].longitude,obj[i].name)
+        addMarker(obj[i])
     }
-    append += '</ol>'
     document.getElementById('spotlist').innerHTML = append
 }
 
