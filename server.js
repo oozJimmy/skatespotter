@@ -43,7 +43,7 @@ app.post('/spot',(req,res) =>{
   .then(
     (value)=>{
       console.log(`Mongo upload resolved:`+JSON.stringify(value))
-      res.send(`Mongo upload resolved:`+JSON.stringify(value) + JSON.stringify(req.body)+ 'uploaded')},
+      res.status(201).send(value)},
     (error)=>console.log('ERROR:',error))
   //res.status(200).send(JSON.stringify(req.body))
 })
