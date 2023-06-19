@@ -2,9 +2,16 @@ Bootstrap library for UI/UX
 Google Maps Platform to implement spot mapping 
 
 todo:
+-add info cards to map markers
+-add bootstrap element (cards?, accordion ) to spot list
+-change spot form to modal
 -add google maps platform to spot submit (drop pin)
--add more bootstrap 
--add conditional functions to signup/login/logout displaying buttons
+
+ideas/extensions:
+-add search function to spot list
+-add spot category and description to spot db listing (stair, handrail, curb, pad, hip, other)
+
+-add spot pictures / if no picture submitted googlemaps satellite picture used?
 
 
 compile scss:
