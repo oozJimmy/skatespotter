@@ -57,7 +57,7 @@ async function addMarker(spot){
 //Add spot to the db and map
 async function addSpot(){ //Callback function for submit button
     //Get spot data from input fields
-    let spotObj = {
+    var spotObj = {
         name:document.getElementById('spot-name').value,
         latitude:parseFloat(document.getElementById('lat').value),
         longitude:parseFloat(document.getElementById('lng').value),
@@ -77,7 +77,7 @@ async function addSpot(){ //Callback function for submit button
     })
         .then((response) => response.json())
         .then((json) => {
-            displaySpotJSON(json)
+            loadSpots()
             console.log(json)})
         .catch((error)=>console.error(error))
 }

@@ -104,33 +104,59 @@
     </div> <!--End Header container-->
 
     
-
+    <!--SPOT SUBMISSION-->
     <!--Text field for lat lng and submit button-->
-    <h5>Add a skate spot to the map!</h5>
-    <div class="input">
-      <label for="spot-name">Spot Name:</label><br>
-      <input type="text" id="spot-name" placeholder="Add a name for your spot" value ="Railbridge TESTER"><br>
-      <label for="lat">Latitude:</label><br>
-      <input type="text" id="lat" placeholder="Latitude" value ="42.110158"><br>
-      <label for="lng">Longitude:</label><br>
-      <input type="text" id="lng" placeholder="Longitude"value = "-75.976845"><br>
-      <label for="lng">Description:</label><br>
-      <input type="text" id="spot-description" placeholder="Description" value="TESTING SPOT SUBMISSION REMOVE ALL ENTRIES"><br>
-      <button type="submit" id="spot-submit">Submit Spot</button>
+    
+
+    <!-- Button trigger modal -->
+    
+
+    <!-- Modal -->
+    <div class="modal fade" id="spot-submit-modal" tabindex="-1" aria-labelledby="spot-submit-label" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="spot-submit-label">Input Spot Details</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="input">
+              <label for="spot-name">Spot Name:</label><br>
+              <input type="text" id="spot-name" placeholder="Add a name for your spot" value ="Railbridge TESTER"><br>
+              <label for="lat">Latitude:</label><br>
+              <input type="text" id="lat" placeholder="Latitude" value ="42.110158"><br>
+              <label for="lng">Longitude:</label><br>
+              <input type="text" id="lng" placeholder="Longitude"value = "-75.976845"><br>
+              <label for="lng">Description:</label><br>
+              <input type="text" id="spot-description" placeholder="Description" value="TESTING SPOT SUBMISSION REMOVE ALL ENTRIES"><br>
+              
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" id="spot-submit">Submit Spot</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--END SPOT SUBMISSION-->
+
+
+    <!--The header element for spot map -->
+    <div class="container p-3">
+      <h4>World Spot Map</h4>
       
     </div>
 
     <!--The div element for spot map -->
-    
-    
-    <div class="container p-3">
-      <h4>World Spot Map</h4>
-    </div>
-
     <div class="container p-3" id="map"></div>
 
     <!--List of spots-->
     <div class="container p-3">
+      <h5>Add a skate spot to the map!</h5>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#spot-submit-modal">
+        Add a spot!
+      </button>
       <div class="accordion" id="spotlist"></div>
     </div>
     
