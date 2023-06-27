@@ -1,19 +1,24 @@
-// Initialize map variable
+//Declare constants
+const mapCenter = { lat: 42.098716, lng: -75.912528 };
+
+// Declare map variables
 var map;
+var submitMap;
+
+//Declare new spot LatLng object
+var newSpotLocation;
 
 //Add the Google map window
 async function initMap() {
     //Import map and marker 
     const { Map } =  await google.maps.importLibrary("maps");
 
-    // Position objects
-    const mapCenter = { lat: 42.098716, lng: -75.912528 };
-
     // The map, centered at Court and state, downtown Binghamton
     map = new Map(document.getElementById("map"), {
     zoom: 8,
     center: mapCenter,
     mapId: "aeb05cd88240c11c",
+    streetViewControl: false,
     });
 
     console.log('Map init function called',map)
@@ -59,8 +64,10 @@ async function addSpot(){ //Callback function for submit button
     //Get spot data from input fields
     var spotObj = {
         name:document.getElementById('spot-name').value,
-        latitude:parseFloat(document.getElementById('lat').value),
-        longitude:parseFloat(document.getElementById('lng').value),
+        /* latitude:parseFloat(document.getElementById('lat').value),
+        longitude:parseFloat(document.getElementById('lng').value), */
+        latitude:newSpotLocation.lat,
+        longitude:newSpotLocation.lng,
         description:document.getElementById('spot-description').value
     }
 
@@ -94,7 +101,7 @@ function loadSpots(){
 
 //Displays HTML list given obj list of skate spots
 function displaySpotJSON(spotlist){
-    var append = `<h4>All Submitted Spots ( ${spotlist.length} )</h4>`
+    var append = `<h4 class="text-light">All Submitted Spots ( ${spotlist.length} )</h4>`
     for(var i = 0; i<spotlist.length;i++){
         //append += `<li>${spotlist[i].name}<br>Latitude:${spotlist[i].latitude}<br>Longitude:${spotlist[i].longitude}<br><p>Description: ${spotlist[i].description}</p></li>`
 
@@ -174,13 +181,14 @@ async function signUp(){
 }
 
 //Makes UI changes for logging in - called upon successful signup/login
-function loggedIn(username, newUser = false){
+function loggedIn(username, newUser = false, bypass = false){
 
     console.log('loggedIn called')
     console.log(username, newUser)
 
     //Hide signup/login modal
-    $(newUser ? '#signup-modal' : '#login-modal').modal('hide')
+    if(!bypass)
+        $(newUser ? '#signup-modal' : '#login-modal').modal('hide')
 
     //Hide login button
     document.getElementById('login-cell').style.display= 'none';
@@ -195,6 +203,9 @@ function loggedIn(username, newUser = false){
     welcome = document.getElementById('welcome')
     welcome.style.display = 'initial'
     welcome.innerHTML = `<p>Welcome ${username}, now drop a spot poser.</p>`
+
+    //Show add spot section (available to users only)
+    document.getElementById('add-spot').style.display = 'initial'
 
 }
 
@@ -213,19 +224,83 @@ function logOut(){
 
     //Show login button
     document.getElementById('login-cell').style.display = 'initial'
+
+    //Hide add spot section (available to users only)
+    document.getElementById('add-spot').style.display = 'none'
 }
 
+async function initSubmitMap() {
+    // Request needed libraries.
+    //@ts-ignore
+    const { Map, InfoWindow } = await google.maps.importLibrary("maps");
+    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+  
+    // The map, centered at Uluru
+    submitMap = new Map(document.getElementById("submit-spot-map"), {
+      zoom: 4,
+      center: mapCenter,
+      mapId: "c09d32cdb6318bac",
+      fullscreenControl: false,
+      streetViewControl: false,
+    });
+    
+    const info = new InfoWindow()
+
+    // The marker, positioned at Uluru
+    const marker = new AdvancedMarkerElement({
+      map: submitMap,
+      position: mapCenter,
+      title: "Drag this marker to your spot!",
+      gmpDraggable:true
+    });
+  
+    marker.addListener("dragend", (event) => {
+        const position = marker.position;
+    
+        info.close();
+        info.setContent(
+          `Pin dropped at: ${position.lat}, ${position.lng}`
+        );
+        info.open(marker.map, marker);
+        console.log(`Marker Lat: ${position.lat}\nMarker Lng: ${position.lng}`)
+        newSpotLocation = position
+        console.log(position)
+        console.log(newSpotLocation)
+      });
+
+    console.log('Submit Map initialized',submitMap)
+}
+
+//Switches site theme (light/dark)
+function changeTheme(){
+    var state = document.body.getAttribute('data-bs-theme')
+    console.log(state)
+
+    if(state === 'dark')
+        document.body.setAttribute('data-bs-theme','light')
+    else
+        document.body.setAttribute('data-bs-theme','dark')
+}
+
+function submitScreening(){
+    if(newSpotLocation != undefined)
+        addSpot()
+    else
+        document.getElementById('submit-message').innerText = 'Move the marker to your spot before submitting'
+}
+  
 //Attach listener callbacks to submit buttons
-document.getElementById('spot-submit').addEventListener('click',addSpot)
+document.getElementById('spot-submit').addEventListener('click',submitScreening)
 document.getElementById('login-submit').addEventListener('click',logIn)
 document.getElementById('signup-submit').addEventListener('click',signUp)
 document.getElementById('logout').addEventListener('click',logOut)
-
-//Call logout to set UI elements
-//logOut()
+document.getElementById('outer-add-spot-button').addEventListener('click',initSubmitMap)
 
 //Call function to intitialize the map
 initMap()
 
 //Load list of spots from database and create list and add markers to map
 loadSpots()
+
+//TESTING BYPASS LOGIN REMOVE
+loggedIn('admin',false,true)
