@@ -132,6 +132,7 @@ function displaySpotJSON(spotlist){
 async function logIn(){
     var username = document.getElementById('usr').value
     var password = document.getElementById('pwd').value
+    var msgElement = document.getElementById('login-message')
 
     console.log('logIn function called')
     
@@ -149,15 +150,25 @@ async function logIn(){
 
     console.log(`Server response status: ${response.status}`)
     
+    
     //If response status is successful call loggedIn
-    if(response.status === 202)
+    if(response.status === 202){
         loggedIn(username)
+        msgElement.innerText = ""
+    }
+    else if(response.status === 404 || response.status === 400)
+        msgElement.innerText = 'Username or password incorrect'
+    else if(response.status === 406)
+        msgElement.innerText = 'Please fill out all fields'
+    else 
+        msgElement.innerText = 'Request went wrong... :('
 }
 
 //Signs a new user up
 async function signUp(){
     var username = document.getElementById('newusr').value
     var password = document.getElementById('newpwd').value
+    var msgElement = document.getElementById('signup-message')
 
     console.log('signUp function called')
     
@@ -176,15 +187,22 @@ async function signUp(){
     console.log(`Server response status: ${response.status}`)
 
     //Call loggedIn function to edit the buttons and log new user in
-    if(response.status === 201)
+    if(response.status === 201){
         loggedIn(username,true)
+        msgElement.value = ""
+    }else if(response.status === 406)
+        msgElement.innerText = 'Please fill out all fields'
+    else if(response.status === 400)
+        msgElement.innerText = 'Username taken, select a new one.'
+    else   
+        msgElement.innerText = 'Request went wrong... :('
 }
 
 //Makes UI changes for logging in - called upon successful signup/login
 function loggedIn(username, newUser = false, bypass = false){
 
     console.log('loggedIn called')
-    console.log(username, newUser)
+    console.log('Username: ',username, 'newUser(bool):',newUser)
 
     //Hide signup/login modal
     if(!bypass)
@@ -230,12 +248,9 @@ function logOut(){
 }
 
 async function initSubmitMap() {
-    // Request needed libraries.
-    //@ts-ignore
     const { Map, InfoWindow } = await google.maps.importLibrary("maps");
     const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
   
-    // The map, centered at Uluru
     submitMap = new Map(document.getElementById("submit-spot-map"), {
       zoom: 4,
       center: mapCenter,
@@ -246,7 +261,6 @@ async function initSubmitMap() {
     
     const info = new InfoWindow()
 
-    // The marker, positioned at Uluru
     const marker = new AdvancedMarkerElement({
       map: submitMap,
       position: mapCenter,
@@ -262,10 +276,7 @@ async function initSubmitMap() {
           `Pin dropped at: ${position.lat}, ${position.lng}`
         );
         info.open(marker.map, marker);
-        console.log(`Marker Lat: ${position.lat}\nMarker Lng: ${position.lng}`)
         newSpotLocation = position
-        console.log(position)
-        console.log(newSpotLocation)
       });
 
     console.log('Submit Map initialized',submitMap)

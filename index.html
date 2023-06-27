@@ -52,13 +52,12 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="loginModalLabel">Log In</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
               <div id="user" class="col-sm-6">
+                <span class="text-danger" id="login-message"></span>
                 <h5>Login</h5>
                 <label for="usr">Username:</label>
                 <input class="form-control form-control-sm" type="text" id="usr" name="usr">
@@ -86,6 +85,7 @@
             </div>
             <div class="modal-body">
               <div id="newuser" class="col-sm-6">
+                <span class="text-danger" id="signup-message"></span>
                 <h5>Signup</h5>
                 <label for="newusr">Username:</label>
                 <input class="form-control form-control-sm" type="text" id="newusr" name="newusr">
@@ -112,8 +112,8 @@
 
     <!--SPOT SUBMISSION-->
     <!-- Modal -->
-    <div class="modal fade" id="spot-submit-modal" tabindex="-1" aria-labelledby="spot-submit-label" aria-hidden="true" style="width:100%; height:100%;">
-      <div class="modal-dialog" style="width:100%; height:100%;">
+    <div class="modal  fade" id="spot-submit-modal" tabindex="-1" aria-labelledby="spot-submit-label" aria-hidden="true" style="width:100%; height:100%;">
+      <div class="modal-dialog modal-lg" style="width:100%; height:100%;">
         <div class="modal-content" style="width:100%; height:100%;">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="spot-submit-label">Input Spot Details</h1>
