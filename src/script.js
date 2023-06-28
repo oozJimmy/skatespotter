@@ -45,7 +45,8 @@ async function addMarker(spot){
         content: `<div class="container-fluid text-dark">
                     <h3>${spot.name}</h3>
                     <p>Latitude: ${spot.latitude}<br>
-                    Longitude:${spot.longitude}</p>
+                    Longitude: ${spot.longitude}</p>
+                    <p>Category: ${spot.category}</p>
                     <p>Description: ${spot.description}</p>
                     </div>`,
         ariaLabel: spot.name,
@@ -62,13 +63,16 @@ async function addMarker(spot){
 //Add spot to the db and map
 async function addSpot(){ //Callback function for submit button
     //Get spot data from input fields
+    var categoryElement = document.getElementById('category-select')
+
     var spotObj = {
         name:document.getElementById('spot-name').value,
         /* latitude:parseFloat(document.getElementById('lat').value),
         longitude:parseFloat(document.getElementById('lng').value), */
         latitude:newSpotLocation.lat,
         longitude:newSpotLocation.lng,
-        description:document.getElementById('spot-description').value
+        description:document.getElementById('spot-description').value,
+        category:categoryElement.options[categoryElement.selectedIndex].text
     }
 
     //Create marker and add to map
@@ -116,7 +120,9 @@ function displaySpotJSON(spotlist){
             <ul>
                 <li>Latitude:${spotlist[i].latitude}</li>
                 <li>Longitude:${spotlist[i].longitude}</li>
+                <li>Category:${spotlist[i].category}</li>
             </ul>
+            
             <p>Description: ${spotlist[i].description}</p>
           </div>
         </div>
@@ -224,7 +230,6 @@ function loggedIn(username, newUser = false, bypass = false){
 
     //Show add spot section (available to users only)
     document.getElementById('add-spot').style.display = 'initial'
-
 }
 
 //Makes UI changes for Logout - Called when the user hits the logout button

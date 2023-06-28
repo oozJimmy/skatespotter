@@ -2,11 +2,10 @@ Bootstrap library for UI/UX
 Google Maps Platform to implement spot mapping 
 
 todo:
--finalize authentication ( check notebook )
--add search function to spot list
--add spot category to spot db listing (stair, handrail, curb, pad, hip, other) (dropdown menu in submit modal)
+-add search function to spot list (search by name? ) (is this necessary youre finding spots, categories better)
 -sort spot list by listing type (use drop down menu)
--improve website theme
+-improve website theme( add big picture section under header,inside header have nav buttons (map, add spot, spot list))
+-at least a couple animations
 
 ideas/extensions:
 -add spot pictures / if no picture submitted googlemaps satellite picture used?

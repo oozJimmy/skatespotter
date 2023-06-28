@@ -120,16 +120,34 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div id="spot-modal-body" class="modal-body">
-            <div class="row" style="height:35%;width:100%;">
-              <div  class="form-group" >
-                <label for="spot-name">Spot Name:</label><br>
-                <input type="text" class="form-control" id="spot-name" placeholder="Add a name for your spot" value ="Railbridge TESTER"><br>
+            <div class="form-group">
+              <div class="row" style="height:15%;width:100%;">
+                <div class="col-sm-6">
+                  <label for="spot-name">Spot Name:</label><br>
+                  <input type="text" class="form-control" id="spot-name" placeholder="Add a name for your spot" value ="Railbridge TESTER"><br>
+                </div>
+                <div class="col-sm-6">
+                  <label for="category-select">Type of Spot</label>
+                  <select id= "category-select" class="form-select" aria-label="Category Select">
+                    <option selected>Select a Category</option>
+                    <option value="1">Stair</option>
+                    <option value="2">Handrail</option>
+                    <option value="3">Curb</option>
+                    <option value="4">Pad</option>
+                    <option value="5">Bank</option>
+                    <option value="6">Ledge/Blocks</option>
+                    <option value="7">Other</option>
+                  </select>
+                </div>
+                
+              </div>
+
+              <div class="row" style="height:20%;width:100%;">
                 <label for="spot-description">Description:</label><br>
                 <textarea class="form-control" rows="3" id="spot-description" placeholder="Description" value="TESTING SPOT SUBMISSION REMOVE ALL ENTRIES"></textarea>
               </div>
-
-              
             </div>
+
             <div class="row" style="height:65%;width:100%;">
               <label class="">Drag marker to your spot location:</label>
               <div class="form-control" id="submit-spot-map"></div>
