@@ -111,6 +111,14 @@ app.post('/users',async (req,res)=>{
   }
 })
 
+app.post('/spotlist/:category', (req, res) =>{
+  const {category} = req.params
+  db.connect(db.readAll,{category: category})
+    .then(
+      (data) => res.status(200).send(data),
+      (error)=>res.status(400).send(error))
+})
+
 //-------------------DELETE routing-------------------
 app.delete('/spot', (req,res)=>{
   db.connect(db.deleteListingByName,{searchName:req.body.searchName})

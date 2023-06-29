@@ -60,12 +60,10 @@ exports.readOne = async (obj) => {
 }
 
 exports.readAll =  async (obj) => {
-    const cursor = await client.db(database).collection(obj.collection ? obj.collection:'spots').find({})
-    const results = await cursor.toArray()
+    const filter = obj.category ? {category: obj.category} : {}
+    const cursor = await client.db(database).collection(obj.collection ? obj.collection:'spots').find(filter)
 
-    //console.log(`PRINT:All from collection:\n${results}`)
-
-    return results
+    return await cursor.toArray()
 }
 
 //---------------------Delete---------------------

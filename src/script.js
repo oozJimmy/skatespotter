@@ -94,13 +94,28 @@ async function addSpot(){ //Callback function for submit button
 }
 
 //Gets list of spots from database calls displaySpotJSON
-function loadSpots(){
+async function loadSpots(){
     //Loads the spot list 
     fetch('http://localhost:5000/spotlist',{
     method:'GET'})
     .then((response) => response.json())
     .then((json) => displaySpotJSON(json))
     .catch((error)=>console.error(error))
+}
+
+async function loadSortedSpots(){
+    const categoryElement = document.getElementById('category-sort')
+    const category = categoryElement.options[categoryElement.selectedIndex].text
+
+    if(category === 'All')
+        return loadSpots()
+    
+    //Loads the spot list 
+    fetch('http://localhost:5000/spotlist/' + category,{
+        method:'POST'},)
+        .then((response) => response.json())
+        .then((json) => displaySpotJSON(json))
+        .catch((error)=>console.error(error))
 }
 
 //Displays HTML list given obj list of skate spots
@@ -118,9 +133,9 @@ function displaySpotJSON(spotlist){
         <div id="collapse${i+1}" class="accordion-collapse collapse" aria-labelledby="heading${i+1}" data-bs-parent="#spotlist">
           <div class="accordion-body">
             <ul>
-                <li>Latitude:${spotlist[i].latitude}</li>
-                <li>Longitude:${spotlist[i].longitude}</li>
-                <li>Category:${spotlist[i].category}</li>
+                <li>Latitude: ${spotlist[i].latitude}</li>
+                <li>Longitude: ${spotlist[i].longitude}</li>
+                <li>Category: ${spotlist[i].category}</li>
             </ul>
             
             <p>Description: ${spotlist[i].description}</p>
@@ -311,6 +326,8 @@ document.getElementById('login-submit').addEventListener('click',logIn)
 document.getElementById('signup-submit').addEventListener('click',signUp)
 document.getElementById('logout').addEventListener('click',logOut)
 document.getElementById('outer-add-spot-button').addEventListener('click',initSubmitMap)
+document.getElementById('category-sort').addEventListener('change',loadSortedSpots)
+document.getElementById('sort-reset').addEventListener('click',loadSpots)
 
 //Call function to intitialize the map
 initMap()
