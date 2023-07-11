@@ -120,9 +120,10 @@ async function loadSortedSpots(){
 
 //Displays HTML list given obj list of skate spots
 function displaySpotJSON(spotlist){
-    var append = `<h4 class="text-light">All Submitted Spots ( ${spotlist.length} )</h4>`
+    var header = document.getElementById('spotlist-header')
+    header.innerText = `All Submitted Spots ( ${spotlist.length} )`
+    var append = ``
     for(var i = 0; i<spotlist.length;i++){
-        //append += `<li>${spotlist[i].name}<br>Latitude:${spotlist[i].latitude}<br>Longitude:${spotlist[i].longitude}<br><p>Description: ${spotlist[i].description}</p></li>`
 
         append += `<div class="accordion-item">
         <h2 class="accordion-header" id="heading${i+1}">
@@ -245,6 +246,9 @@ function loggedIn(username, newUser = false, bypass = false){
 
     //Show add spot section (available to users only)
     document.getElementById('add-spot').style.display = 'initial'
+
+    //Set lead add spot button disabled attribute to false
+    document.getElementById('lead-add-spot-button').removeAttribute('disabled')
 }
 
 //Makes UI changes for Logout - Called when the user hits the logout button
@@ -265,6 +269,9 @@ function logOut(){
 
     //Hide add spot section (available to users only)
     document.getElementById('add-spot').style.display = 'none'
+
+    //Set lead add spot button disabled attribute to true
+    document.getElementById('lead-add-spot-button').setAttribute('disabled',true)
 }
 
 async function initSubmitMap() {
@@ -328,6 +335,7 @@ document.getElementById('logout').addEventListener('click',logOut)
 document.getElementById('outer-add-spot-button').addEventListener('click',initSubmitMap)
 document.getElementById('category-sort').addEventListener('change',loadSortedSpots)
 document.getElementById('sort-reset').addEventListener('click',loadSpots)
+document.getElementById('lead-add-spot-button').addEventListener('click',initSubmitMap)
 
 //Call function to intitialize the map
 initMap()

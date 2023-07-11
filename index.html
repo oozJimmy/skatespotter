@@ -19,7 +19,7 @@
 
     <!--Header container-->
     <div class="container-fluid border-bottom border-primary" id="my-container">
-
+      <!--Header row-->
       <div class="row my-custom-row justify-content-center align-items-center">
         <div class="col-sm-4">
           <h1>SkateSpotter</h1>
@@ -29,21 +29,25 @@
           <h3 class="p-3 text-primary">Find skate spots near you!</h3>
         </div>
 
-        <div id="login-cell" class="col-sm-2">
-          <button  id="outer-login" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#login-modal">Login</button>
+        <div class="hstack gap-3 col-sm-4 mx-auto" >
+          <div id="login-cell" class="col-sm-2 me-auto">
+            <button  id="outer-login" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#login-modal">Login</button>
+          </div>
+          
+          <div id="welcome"  style="display:none"></div>
+  
+          <div id="signup-cell" class="col-sm-2 me-auto">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#signup-modal">Signup</button>
+          </div>
+  
+          <div id="logout-cell"  style="display:none">
+            <button id="logout"type="button" class="btn btn-primary" >Logout</button>
+          </div>
         </div>
         
-        <div id="welcome" class="col-sm-2" style="display:none"></div>
-
-        <div id="signup-cell" class="col-sm-2">
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#signup-modal">Signup</button>
-        </div>
-
-        <div id="logout-cell" class="col-sm-2" style="display:none">
-          <button id="logout"type="button" class="btn btn-primary" >Logout</button>
-        </div>
         
       </div>
+      <!--End Header row-->
 
       <!-- Login Modal :
         Add to login by leaving modal html and removing and replacing the button/visibility of button-->
@@ -100,16 +104,14 @@
           </div>
         </div>
       </div>
-
-    
-
-    </div> <!--End Header container-->
+    </div> 
+    <!--End Header container-->
 
     <!--Light/dark theme button-->
     <button type="button" class="btn btn-primary" onclick="changeTheme()"><span class="bi-brightness-high"></span>Change site theme</button>
 
     <!--End Light/dark theme button-->
-
+    
     <!--SPOT SUBMISSION-->
     <!-- Modal -->
     <div class="modal  fade" id="spot-submit-modal" tabindex="-1" aria-labelledby="spot-submit-label" aria-hidden="true" style="width:100%; height:100%;">
@@ -162,7 +164,7 @@
         </div>
       </div>
     </div>
-
+    <!--Add spot button-->
     <div class="text-center" id="add-spot" style="display: none;">
       <h5 id="add-spot-header">Add a skate spot to the map!
         <button id="outer-add-spot-button" type="button" class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#spot-submit-modal">
@@ -173,20 +175,30 @@
     </div>
     <!--END SPOT SUBMISSION-->
 
+    <!--LEAD IMAGE-->
+    <div id="lead-image">
+      <div class="vstack gap-5 col-md-3 mx-auto">
+        <button type="button" class="btn btn-secondary p-3 m-5 fs-4" onclick="window.location.href='/#maphead';">Map</button>
+        <button type="button" class="btn btn-secondary p-3 m-5 fs-4" onclick="window.location.href='/#spotlist-container';">Spot List</button>
+        <button id="lead-add-spot-button" type="button" class="btn btn-secondary p-3 m-5 fs-4" data-bs-toggle="modal" data-bs-target="#spot-submit-modal">Add a spot!</button>
+      </div>
+    </div>
+    <!--END LEAD IMAGE-->
+
+    <!--BEGIN MAP-->
     <!--The header element for spot map -->
-    <div class="container p-3 bg-secondary border border-primary" style="height:90%;width:100%">
+    <div id="maphead" class="container p-3 bg-secondary border border-primary" style="height:90%;width:100%">
       <h4 class="text-light">World Spot Map</h4>
       <div class="container p-3" id="map"></div>
-      
     </div>
 
-    <!--The div element for spot map -->
 
     <!--List of spots-->
-    <div class="container p-3 bg-secondary  border border-primary">
+    <div id="spotlist-container" class="container p-3 bg-secondary  border border-primary">
 
+      <h4 id="spotlist-header"></h4>
       <h5>Sort List by Category</h5>
-      <div class="row">
+      <div class="row m-2">
         <div class="col-sm-11">
           <select id='category-sort' class="form-select" aria-label="Default select example">
             <option selected>All</option>
@@ -207,6 +219,8 @@
       
       <div class="accordion" id="spotlist"></div>
     </div>
+    <!--End List of spots-->
+
     
     <!--//////////// START SCRIPTS ////////////-->
 
